@@ -50,6 +50,29 @@ const AdminPanel = () => {
     'main', 'appetizer', 'dessert', 'beverage', 'snack'
   ];
 
+  // Load canteens with real-time updates
+  const loadCanteens = () => {
+    const q = query(collection(db, 'canteens'), where('isActive', '==', true));
+    return onSnapshot(q, (snapshot) => {
+      const canteensData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setCanteens(canteensData);
+    });
+  };
+
+  // Load all orders for super admins
+  const loadAllOrders = useCallback(() => {
+    if (user?.role !== 'super_admin') return;
+    
+    const q = query(
+      collection(db, 'orders'),
+      orderBy('createdAt', 'desc')
+    );
+    return onSnapshot(q, (snapshot) => {
+      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOrders(ordersData);
+    });
+  }, [user?.role]);
+
   // Load data on component mount
   useEffect(() => {
     if (user && (user.role === 'super_admin' || user.role === 'admin')) {
@@ -173,28 +196,9 @@ const AdminPanel = () => {
     }
   };
 
-  // Load canteens with real-time updates
-  const loadCanteens = () => {
-    const q = query(collection(db, 'canteens'), where('isActive', '==', true));
-    return onSnapshot(q, (snapshot) => {
-      const canteensData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setCanteens(canteensData);
-    });
-  };
 
-  // Load all orders for super admins
-  const loadAllOrders = useCallback(() => {
-    if (user?.role !== 'super_admin') return;
-    
-    const q = query(
-      collection(db, 'orders'),
-      orderBy('createdAt', 'desc')
-    );
-    return onSnapshot(q, (snapshot) => {
-      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setOrders(ordersData);
-    });
-  }, [user?.role]);
+
+
 
 
 
