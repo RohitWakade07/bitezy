@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitezy - Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #3B38A0 0%, #8B5CF6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 32px;
+      border-radius: 24px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(59,56,160,0.15);
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+    }
+    .app-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+    .loading {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="logo">
+      <img src="logo192.png" alt="Bitezy Logo" />
+    </div>
+    <div class="app-name">Bitezy</div>
+    <div class="loading">Loading...</div>
+  </div>
+</body>
+</html>
