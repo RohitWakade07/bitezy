@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { 
   Store, 
@@ -59,7 +59,38 @@ const AdminPanel = () => {
         loadAllOrders();
       }
     }
-  }, [user]);
+  }, [user, loadAllOrders]);
+
+  // Load menu items for selected canteen
+  const loadMenuItems = useCallback(() => {
+    if (!selectedCanteen) return;
+    
+    const q = query(
+      collection(db, `canteens/${selectedCanteen.id}/menuItems`), 
+      where('isActive', '==', true)
+    );
+    
+    return onSnapshot(q, (snapshot) => {
+      const menuData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setMenuItems(menuData);
+    });
+  }, [selectedCanteen]);
+
+  // Load orders for selected canteen
+  const loadOrders = useCallback(() => {
+    if (!selectedCanteen) return;
+    
+    const q = query(
+      collection(db, 'orders'),
+      where('canteenId', '==', selectedCanteen.id),
+      orderBy('createdAt', 'desc')
+    );
+    
+    return onSnapshot(q, (snapshot) => {
+      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOrders(ordersData);
+    });
+  }, [selectedCanteen]);
 
   // Load menu items and orders when canteen is selected
   useEffect(() => {
@@ -151,37 +182,8 @@ const AdminPanel = () => {
     });
   };
 
-  // Load menu items for selected canteen
-  const loadMenuItems = () => {
-    if (!selectedCanteen) return;
-    
-    const q = query(
-      collection(db, `canteens/${selectedCanteen.id}/menuItems`), 
-      where('isAvailable', '==', true)
-    );
-    return onSnapshot(q, (snapshot) => {
-      const menuData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setMenuItems(menuData);
-    });
-  };
-
-  // Load orders for selected canteen
-  const loadOrders = () => {
-    if (!selectedCanteen) return;
-    
-    const q = query(
-      collection(db, 'orders'), 
-      where('canteenId', '==', selectedCanteen.id),
-      orderBy('createdAt', 'desc')
-    );
-    return onSnapshot(q, (snapshot) => {
-      const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setOrders(ordersData);
-    });
-  };
-
   // Load all orders for super admins
-  const loadAllOrders = () => {
+  const loadAllOrders = useCallback(() => {
     if (user?.role !== 'super_admin') return;
     
     const q = query(
@@ -192,7 +194,11 @@ const AdminPanel = () => {
       const ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setOrders(ordersData);
     });
-  };
+  }, [user?.role]);
+
+
+
+
 
   // Handle canteen creation
   const handleAddCanteen = async (e) => {

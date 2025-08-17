@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { db } from '../firebase/config';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -19,7 +19,7 @@ export const CartProvider = ({ children }) => {
   const { user } = useAuth();
 
   // Define loadCartFromFirestore function first
-  const loadCartFromFirestore = async () => {
+  const loadCartFromFirestore = useCallback(async () => {
     if (!user?.uid) return;
     
     setLoading(true);
@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.uid]);
 
   const saveCartToFirestore = async (items) => {
     if (!user?.uid) return;
@@ -52,7 +52,7 @@ export const CartProvider = ({ children }) => {
     } else {
       setCartItems([]);
     }
-  }, [user]); // Remove loadCartFromFirestore from dependencies to prevent infinite loops
+  }, [user, loadCartFromFirestore]);
 
   const addToCart = async (item) => {
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);

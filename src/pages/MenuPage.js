@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { db } from '../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
 import { 
   Search, 
-  Filter, 
-  ShoppingCart, 
   Plus, 
-  Minus,
-  Star,
   Clock,
-  MapPin,
   XCircle,
   CheckCircle,
   Store

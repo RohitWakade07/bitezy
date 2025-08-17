@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { signInWithGoogle } from '../../firebase/auth';
-import { Mail, Lock, Eye, EyeOff, User, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -244,9 +243,9 @@ const RegisterPage = () => {
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
             By creating an account, you agree to our{' '}
-            <a href="#" className="text-blue-600 hover:text-blue-700">Terms of Service</a>
+            <button type="button" className="text-blue-600 hover:text-blue-700">Terms of Service</button>
             {' '}and{' '}
-            <a href="#" className="text-blue-600 hover:text-blue-700">Privacy Policy</a>
+            <button type="button" className="text-blue-600 hover:text-blue-700">Privacy Policy</button>
           </p>
         </div>
       </motion.div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiSettings, FiLogOut, FiEdit3, FiShield } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
