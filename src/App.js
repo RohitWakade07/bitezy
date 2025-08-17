@@ -52,7 +52,7 @@ const ProtectedRoute = ({ children }) => {
 
 const AppContent = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [theme, setTheme] = useLocalStorage('theme', 'light');
+  const [theme] = useLocalStorage('theme', 'light');
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);

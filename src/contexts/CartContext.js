@@ -25,7 +25,7 @@ export const CartProvider = ({ children }) => {
     } else {
       setCartItems([]);
     }
-  }, [user]);
+  }, [user, loadCartFromFirestore]);
 
   const loadCartFromFirestore = async () => {
     if (!user?.uid) return;

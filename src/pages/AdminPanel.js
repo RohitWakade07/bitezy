@@ -1,29 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { 
-  Users, 
   Store, 
   Package, 
-  BarChart3, 
-  Settings, 
-  LogOut,
-  Plus,
-  Edit,
   Trash2,
-  Eye,
   CheckCircle,
   XCircle,
   Clock,
-  TrendingUp,
-  DollarSign,
   Utensils,
   X
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { db } from '../firebase/config';
-import { collection, getDocs, doc, updateDoc, deleteDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, updateDoc, deleteDoc, addDoc, onSnapshot, query, where, orderBy, serverTimestamp } from 'firebase/firestore';
 
 const AdminPanel = () => {
   const { user } = useAuth();
@@ -78,7 +67,7 @@ const AdminPanel = () => {
       loadMenuItems();
       loadOrders();
     }
-  }, [selectedCanteen]);
+  }, [selectedCanteen, loadMenuItems, loadOrders]);
 
   // Request notification permission on component mount - using exact same logic as user side
   useEffect(() => {
