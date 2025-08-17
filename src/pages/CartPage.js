@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import { db } from '../firebase/config';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { 
   Trash2, 
   Plus, 
   Minus, 
-  ShoppingCart, 
-  ArrowLeft,
-  Clock,
-  CheckCircle,
-  AlertCircle
+  ShoppingCart
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import PaymentInterface from '../components/UI/PaymentInterface';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCart();
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [showPayment, setShowPayment] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -63,50 +57,34 @@ const CartPage = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      // Create the order
-      const orderData = {
-        userId: user.uid,
-        userEmail: user.email,
-        customerName: user.displayName || user.email,
-        canteenId: canteenIds[0],
-        canteenName: cartItems[0].canteenName,
-        items: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          description: item.description,
-          price: item.price,
-          quantity: item.quantity,
-          imageURL: item.imageURL,
-          category: item.category
-        })),
-        total: getTotalPrice(),
-        subtotal: getTotalPrice(),
-        tax: getTotalPrice() * 0.1, // 10% tax
-        totalWithTax: getTotalPrice() * 1.1,
-        status: 'pending',
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      };
+    // Prepare order details for payment
+    const orderData = {
+      userId: user.uid,
+      userEmail: user.email,
+      customerName: user.displayName || user.email,
+      canteenId: canteenIds[0],
+      canteenName: cartItems[0].canteenName,
+      items: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        quantity: item.quantity,
+        imageURL: item.imageURL,
+        category: item.category
+      })),
+      total: getTotalPrice(),
+      subtotal: getTotalPrice(),
+      tax: getTotalPrice() * 0.1, // 10% tax
+      totalWithTax: getTotalPrice() * 1.1,
+      status: 'pending',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
-      // Add the order to Firestore
-      const orderRef = await addDoc(collection(db, 'orders'), orderData);
-      
-      toast.success(`Order placed successfully! Order #${orderRef.id.slice(-8)}`);
-      
-      // Clear the cart after successful order
-      await clearCart();
-      
-      // Navigate to orders page
-      navigate('/orders');
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Checkout failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    // Set order details and show payment interface
+    setOrderDetails(orderData);
+    setShowPayment(true);
   };
 
   if (cartItems.length === 0) {
@@ -124,6 +102,16 @@ const CartPage = () => {
           </button>
         </div>
       </div>
+    );
+  }
+
+  // Show payment interface if checkout is initiated
+  if (showPayment && orderDetails) {
+    return (
+      <PaymentInterface 
+        onBack={() => setShowPayment(false)}
+        orderDetails={orderDetails}
+      />
     );
   }
 
@@ -177,7 +165,7 @@ const CartPage = () => {
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-medium text-gray-900 truncate">{item.name}</h3>
                       <p className="text-sm text-gray-500">{item.description}</p>
-                      <p className="text-lg font-bold text-green-600">${item.price}</p>
+                      <p className="text-lg font-bold text-green-600">₹{item.price}</p>
                     </div>
                     
                     <div className="flex items-center space-x-2">
@@ -198,7 +186,7 @@ const CartPage = () => {
                     
                     <div className="text-right">
                       <p className="text-lg font-bold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₹{(item.price * item.quantity).toFixed(2)}
                       </p>
                       <button
                         onClick={() => handleRemoveItem(item.id)}
@@ -221,26 +209,26 @@ const CartPage = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Subtotal ({getTotalItems()} items)</span>
-                  <span>${getTotalPrice().toFixed(2)}</span>
+                  <span>₹{getTotalPrice().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Tax</span>
-                  <span>${(getTotalPrice() * 0.1).toFixed(2)}</span>
+                  <span>₹{(getTotalPrice() * 0.1).toFixed(2)}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-3">
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>Total</span>
-                    <span>${(getTotalPrice() * 1.1).toFixed(2)}</span>
+                    <span>₹{(getTotalPrice() * 1.1).toFixed(2)}</span>
                   </div>
                 </div>
               </div>
               
               <button
                 onClick={handleCheckout}
-                disabled={loading || cartItems.length === 0}
+                disabled={cartItems.length === 0}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : 'Proceed to Checkout'}
+                Proceed to Checkout
               </button>
               
               <p className="text-xs text-gray-500 mt-3 text-center">

@@ -19,14 +19,58 @@ const LoadingScreen = ({
     >
       {/* Logo/Brand */}
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={{ scale: 0.8, opacity: 0, rotate: -20 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className="mb-8"
       >
-        <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg">
-          <span className="text-3xl font-bold text-white">CC</span>
-        </div>
+        <motion.div 
+          className="w-24 h-24 bg-gradient-to-br from-blue-500 to-cream via-purple-600 rounded-2xl flex items-center justify-center shadow-xl"
+          whileHover={{ scale: 1.05 }}
+          animate={{
+            boxShadow: [
+              "0 10px 25px -5px rgba(59, 130, 246, 0.3)",
+              "0 20px 40px -5px rgba(147, 51, 234, 0.4)",
+              "0 10px 25px -5px rgba(59, 130, 246, 0.3)"
+            ],
+            scale: [1, 1.02, 1]
+          }}
+          transition={{
+            boxShadow: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            },
+            scale: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }
+          }}
+        >
+          <motion.img
+            src="/logo.png"
+            alt="Bitezy Logo"
+            className="w-16 h-16 object-contain"
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            whileHover={{ rotate: 360 }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          <motion.div
+            className="w-16 h-16 flex items-center justify-center text-white text-2xl font-bold"
+            style={{ display: 'none' }}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            B
+          </motion.div>
+        </motion.div>
       </motion.div>
 
       {/* Spinner */}

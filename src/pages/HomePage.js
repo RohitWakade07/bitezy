@@ -2,26 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import { db } from '../firebase/config';
-import { collection, getDocs } from 'firebase/firestore';
 import { 
-  Utensils, 
-  ShoppingCart, 
+  Search, 
+  ArrowRight, 
   Clock, 
+  ShoppingCart, 
+  Utensils, 
+  ChefHat, 
+  Truck, 
+  Shield, 
   Star, 
   MapPin, 
-  Search,
-  ArrowRight,
-  ChefHat,
-  Truck,
-  Shield,
-  Percent,
-  Sparkles,
-  X,
-  Store
+  Percent, 
+  X, 
+  Store,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -123,9 +123,11 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Utensils className="w-6 h-6 text-white" />
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="Bitezy" 
+                className="w-10 h-10 rounded-lg"
+              />
               <h1 className="text-3xl font-bold text-gray-900">Bitezy</h1>
             </div>
             <div className="text-right">
@@ -137,7 +139,7 @@ const HomePage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Discount Banner */}
+        {/* 1. Discount Banner - First Position */}
         <AnimatePresence>
           {showDiscountBanner && (
             <motion.div
@@ -276,14 +278,14 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        {/* Quick Actions */}
+        {/* 2. Quick Actions - Ready to Order (Second Position) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="mb-12"
         >
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Ready to Order?</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {quickActions.map((action, index) => (
               <Link
@@ -320,44 +322,12 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        {/* Features */}
+        {/* 3. Canteens Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="mb-12"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Why Choose Bitezy?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center"
-                whileHover={{ 
-                  y: -5,
-                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.div 
-                  className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4"
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <div className="text-blue-600">{feature.icon}</div>
-                </motion.div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h4>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Canteens Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
         >
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-gray-900">Available Canteens</h3>
@@ -451,39 +421,35 @@ const HomePage = () => {
           )}
         </motion.div>
 
-        {/* Call to Action */}
+        {/* 4. Features - Why Choose Bitezy (Last Position) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-16 text-center"
+          transition={{ delay: 0.3 }}
         >
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white relative overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute inset-0">
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-400/20 to-purple-400/20"></div>
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-white bg-opacity-10 rounded-full"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-white bg-opacity-5 rounded-full"></div>
-            </div>
-            
-            <div className="relative z-10">
-              <h3 className="text-3xl font-bold mb-4">Ready to Order?</h3>
-              <p className="text-xl text-blue-100 mb-6">
-                Discover amazing food from your favorite canteens
-              </p>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Why Choose Bitezy?</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center"
+                whileHover={{ 
+                  y: -5,
+                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                transition={{ duration: 0.3 }}
               >
-                <Link
-                  to="/menu"
-                  className="inline-flex items-center space-x-2 bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+                <motion.div 
+                  className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4"
+                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
                 >
-                  <span>Start Ordering</span>
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+                  <div className="text-blue-600">{feature.icon}</div>
+                </motion.div>
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h4>
+                <p className="text-gray-600">{feature.description}</p>
               </motion.div>
-            </div>
+            ))}
           </div>
         </motion.div>
       </div>

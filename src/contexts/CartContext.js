@@ -18,15 +18,7 @@ export const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Load cart from Firestore when user changes
-  useEffect(() => {
-    if (user?.uid) {
-      loadCartFromFirestore();
-    } else {
-      setCartItems([]);
-    }
-  }, [user, loadCartFromFirestore]);
-
+  // Define loadCartFromFirestore function first
   const loadCartFromFirestore = async () => {
     if (!user?.uid) return;
     
@@ -52,6 +44,15 @@ export const CartProvider = ({ children }) => {
       console.error('Error saving cart:', error);
     }
   };
+
+  // Load cart from Firestore when user changes
+  useEffect(() => {
+    if (user?.uid) {
+      loadCartFromFirestore();
+    } else {
+      setCartItems([]);
+    }
+  }, [user]); // Remove loadCartFromFirestore from dependencies to prevent infinite loops
 
   const addToCart = async (item) => {
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);

@@ -391,16 +391,16 @@ const OrderPage = () => {
             <p className="text-gray-600 mb-6">
               You haven't placed any orders yet. Start by browsing our menu!
             </p>
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">Ready to order some delicious food?</p>
-              <a
-                href="/menu"
-                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                <span>Browse Menu</span>
-                <Package className="w-4 h-4" />
-              </a>
-            </div>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-500">Ready to order some delicious food?</p>
+                <a
+                  href="/menu"
+                  className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                >
+                  <span>Browse Menu</span>
+                  <Package className="w-4 h-4" />
+                </a>
+              </div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -434,7 +434,13 @@ const OrderPage = () => {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-400">{getEstimatedTime(order.status, order.createdAt)}</p>
+                        <div className="flex items-center space-x-1">
+                          <Clock className="w-3 h-3 text-gray-400" />
+                          <span className="text-xs text-gray-400">{getEstimatedTime(order.status, order.createdAt)}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 mt-1">
+                          <span className="text-xs text-gray-500">Ordered at: {order.createdAt?.toDate?.()?.toLocaleTimeString() || 'N/A'}</span>
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
@@ -495,21 +501,28 @@ const OrderPage = () => {
 
                   {/* Order Progress Timeline */}
                   <div className="mb-4">
-                    <h4 className="font-medium text-gray-900 mb-3">Order Progress</h4>
+                    <h4 className="font-medium text-gray-900 mb-3 flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-blue-600" />
+                      <span>Order Progress</span>
+                    </h4>
                     <div className="space-y-3">
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                         <span className="text-sm text-gray-600">Order placed</span>
-                        <span className="text-xs text-gray-400">
-                          {order.createdAt?.toDate?.()?.toLocaleString() || 'N/A'}
-                        </span>
+                        <div className="flex items-center space-x-1 text-xs text-gray-400">
+                          <Clock className="w-3 h-3" />
+                          <span>{order.createdAt?.toDate?.()?.toLocaleString() || 'N/A'}</span>
+                        </div>
                       </div>
                       
                       {order.status === 'accepted' && (
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order accepted</span>
-                          <span className="text-xs text-gray-400">Accepted</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Accepted</span>
+                          </div>
                         </div>
                       )}
                       
@@ -517,7 +530,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order confirmed and preparing</span>
-                          <span className="text-xs text-gray-400">In progress</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>In progress</span>
+                          </div>
                         </div>
                       )}
                       
@@ -525,7 +541,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order ready for pickup</span>
-                          <span className="text-xs text-gray-400">Ready now!</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Ready now!</span>
+                          </div>
                         </div>
                       )}
                       
@@ -533,7 +552,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order delivered</span>
-                          <span className="text-xs text-gray-400">Completed</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Completed</span>
+                          </div>
                         </div>
                       )}
                       
@@ -541,7 +563,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order completed</span>
-                          <span className="text-xs text-gray-400">Completed</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Completed</span>
+                          </div>
                         </div>
                       )}
                       
@@ -549,7 +574,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order rejected</span>
-                          <span className="text-xs text-gray-400">Rejected</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Rejected</span>
+                          </div>
                         </div>
                       )}
                       
@@ -557,7 +585,10 @@ const OrderPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                           <span className="text-sm text-gray-600">Order cancelled</span>
-                          <span className="text-xs text-gray-400">Cancelled</span>
+                          <div className="flex items-center space-x-1 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            <span>Cancelled</span>
+                          </div>
                         </div>
                       )}
                     </div>
